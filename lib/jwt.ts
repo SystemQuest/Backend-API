@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose'
+import { SignJWT, jwtVerify, JWTPayload } from 'jose'
 
 export interface TokenPayload {
   version: '1.0'
@@ -32,7 +32,7 @@ export async function generateToken(payload: Omit<TokenPayload, 'version' | 'iss
     ...payload,
   }
 
-  const token = await new SignJWT(fullPayload as any)
+  const token = await new SignJWT({ ...fullPayload } as JWTPayload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt(now)
     .setExpirationTime(expiresAt)
