@@ -188,14 +188,51 @@ async function main() {
 
   console.log(`✅ Created ${loadBalancerStages.length} stages for Load Balancer course`)
 
-  // Create test user
+  // Create CourseLanguage relations (supported languages for each course)
+  const courseLanguagePairs = [
+    // WebSocket Server supports Go, Python, Java
+    { courseId: websocket.id, languageId: go.id },
+    { courseId: websocket.id, languageId: python.id },
+    { courseId: websocket.id, languageId: java.id },
+    
+    // Consistent Hashing supports Go, Python
+    { courseId: consistentHash.id, languageId: go.id },
+    { courseId: consistentHash.id, languageId: python.id },
+    
+    // Bloom Filter supports Go, Python, Java
+    { courseId: bloomFilter.id, languageId: go.id },
+    { courseId: bloomFilter.id, languageId: python.id },
+    { courseId: bloomFilter.id, languageId: java.id },
+    
+    // Load Balancer supports Go, Python
+    { courseId: loadBalancer.id, languageId: go.id },
+    { courseId: loadBalancer.id, languageId: python.id },
+  ]
+
+  for (const pair of courseLanguagePairs) {
+    await prisma.courseLanguage.upsert({
+      where: {
+        courseId_languageId: {
+          courseId: pair.courseId,
+          languageId: pair.languageId,
+        },
+      },
+      update: {},
+      create: pair,
+    })
+  }
+
+  console.log(`✅ Created ${courseLanguagePairs.length} course-language relations`)
+
+  // Create test user (using new schema: username + githubId)
   const testUser = await prisma.user.upsert({
     where: { email: 'test@systemquest.dev' },
     update: {},
     create: {
       email: 'test@systemquest.dev',
       name: 'Test User',
-      githubLogin: 'testuser',
+      username: 'testuser',
+      githubId: '99999999', // Fake GitHub ID for testing
     },
   })
 

@@ -1,31 +1,46 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@/lib/prisma"
+import { NextRequest, NextResponse } from 'next/server'
+import { verifyAccessToken, type AccessTokenPayload } from './jwt'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    GitHub({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-      authorization: {
-        params: {
-          scope: "read:user user:email repo",
-        },
-      },
-    }),
-  ],
-  callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
-      }
-      return session
-    },
-  },
-  pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
-  },
-})
+export async function requireAuth(req: NextRequest) {
+  const authHeader = req.headers.get('authorization')
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return {
+      error: NextResponse.json(
+        { error: { code: 'UNAUTHORIZED', message: 'Authorization header required' } },
+        { status: 401 }
+      ),
+    }
+  }
+  
+  const token = authHeader.substring(7)
+  
+  try {
+    const payload = await verifyAccessToken(token)
+    return { user: payload }
+  } catch (error) {
+    return {
+      error: NextResponse.json(
+        { error: { code: 'UNAUTHORIZED', message: 'Invalid or expired token' } },
+        { status: 401 }
+      ),
+    }
+  }
+}
+
+export async function optionalAuth(req: NextRequest) {
+  const authHeader = req.headers.get('authorization')
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { user: null }
+  }
+  
+  const token = authHeader.substring(7)
+  
+  try {
+    const payload = await verifyAccessToken(token)
+    return { user: payload }
+  } catch (error) {
+    return { user: null }
+  }
+}
