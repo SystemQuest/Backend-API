@@ -73,7 +73,7 @@ echo "🔐 认证相关 API"
 echo "═══════════════════════════════════════════"
 echo ""
 
-test_api "GET" "/api/v1/auth/me" "获取当前用户信息" "true"
+test_api "GET" "/v1/auth/me" "获取当前用户信息" "true"
 
 # 2. 课程相关 API
 echo "═══════════════════════════════════════════"
@@ -81,12 +81,12 @@ echo "📚 课程相关 API"
 echo "═══════════════════════════════════════════"
 echo ""
 
-test_api "GET" "/api/v1/courses" "获取课程列表" "false"
-test_api "GET" "/api/v1/courses?include=stages,languages" "获取课程列表（包含关联数据）" "false"
-test_api "GET" "/api/v1/courses/websocket-server" "获取 WebSocket Server 课程详情" "false"
-test_api "GET" "/api/v1/courses/consistent-hashing" "获取 Consistent Hashing 课程详情" "false"
-test_api "GET" "/api/v1/courses/bloom-filter" "获取 Bloom Filter 课程详情" "false"
-test_api "GET" "/api/v1/courses/load-balancer" "获取 Load Balancer 课程详情" "false"
+test_api "GET" "/v1/courses" "获取课程列表" "false"
+test_api "GET" "/v1/courses?include=stages,languages" "获取课程列表（包含关联数据）" "false"
+test_api "GET" "/v1/courses/websocket-server" "获取 WebSocket Server 课程详情" "false"
+test_api "GET" "/v1/courses/consistent-hash" "获取 Consistent Hashing 课程详情" "false"
+test_api "GET" "/v1/courses/bloom-filter" "获取 Bloom Filter 课程详情" "false"
+test_api "GET" "/v1/courses/load-balancer" "获取 Load Balancer 课程详情" "false"
 
 # 3. 语言相关 API
 echo "═══════════════════════════════════════════"
@@ -94,7 +94,7 @@ echo "💻 语言相关 API"
 echo "═══════════════════════════════════════════"
 echo ""
 
-test_api "GET" "/api/v1/languages" "获取语言列表" "false"
+test_api "GET" "/v1/languages" "获取语言列表" "false"
 
 # 测试完成
 echo "═══════════════════════════════════════════"

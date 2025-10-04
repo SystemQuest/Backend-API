@@ -45,7 +45,7 @@ export function middleware(request: NextRequest) {
   return response
 }
 
-// 配置 middleware 只应用于 API 路由
+// 配置 middleware 只应用于 API 路由（已从 /api/v1 迁移到 /v1）
 export const config = {
-  matcher: '/api/:path*',
+  matcher: '/v1/:path*',
 }

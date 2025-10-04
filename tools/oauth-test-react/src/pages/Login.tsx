@@ -20,7 +20,7 @@ export default function Login() {
     setError(null)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/github`)
+      const response = await fetch(`${API_BASE_URL}/v1/auth/github`)
       const data = await response.json()
 
       if (data.authUrl) {

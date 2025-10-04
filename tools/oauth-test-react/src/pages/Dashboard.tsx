@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   const loadUser = async () => {
     setLoading(true)
-    const result = await api.get<User>('/api/v1/auth/me')
+    const result = await api.get<User>('/v1/auth/me')
 
     if (result.error) {
       console.error('Failed to load user:', result.error)
@@ -168,13 +168,13 @@ export default function Dashboard() {
           <div className="test-buttons">
             <button
               className="test-button"
-              onClick={() => testEndpoint('/api/v1/auth/me', 'GET /auth/me')}
+              onClick={() => testEndpoint('/v1/auth/me', 'GET /auth/me')}
             >
               Test GET /auth/me
             </button>
             <button
               className="test-button"
-              onClick={() => testEndpoint('/api/v1/courses', 'GET /courses')}
+              onClick={() => testEndpoint('/v1/courses', 'GET /courses')}
             >
               Test GET /courses
             </button>
@@ -182,7 +182,7 @@ export default function Dashboard() {
               className="test-button"
               onClick={() =>
                 testEndpoint(
-                  '/api/v1/courses?include=stages,languages',
+                  '/v1/courses?include=stages,languages',
                   'GET /courses?include=stages,languages'
                 )
               }
@@ -191,7 +191,7 @@ export default function Dashboard() {
             </button>
             <button
               className="test-button"
-              onClick={() => testEndpoint('/api/v1/languages', 'GET /languages')}
+              onClick={() => testEndpoint('/v1/languages', 'GET /languages')}
             >
               Test GET /languages
             </button>
