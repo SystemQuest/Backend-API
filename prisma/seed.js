@@ -42,6 +42,7 @@ async function main() {
     create: {
       name: 'Build Your Own WebSocket Server',
       slug: 'websocket-server',
+      shortDescription: 'Master real-time communication by building a WebSocket server',
       description: 'Master real-time communication by building a WebSocket server from scratch, implementing the protocol handshake, frame parsing, and bidirectional messaging.',
     },
   })
@@ -52,6 +53,7 @@ async function main() {
     create: {
       name: 'Build Your Own Consistent Hashing',
       slug: 'consistent-hash',
+      shortDescription: 'Learn distributed systems with consistent hashing',
       description: 'Learn distributed system fundamentals by implementing consistent hashing with virtual nodes for load balancing and data partitioning.',
     },
   })
@@ -62,6 +64,7 @@ async function main() {
     create: {
       name: 'Build Your Own Bloom Filter',
       slug: 'bloom-filter',
+      shortDescription: 'Build a probabilistic data structure for membership testing',
       description: 'Understand probabilistic data structures by building a space-efficient Bloom filter for membership testing with configurable false positive rates.',
     },
   })
@@ -72,6 +75,7 @@ async function main() {
     create: {
       name: 'Build Your Own Load Balancer',
       slug: 'load-balancer',
+      shortDescription: 'Design scalable systems with a Layer 7 load balancer',
       description: 'Design scalable systems by implementing a Layer 7 load balancer with multiple algorithms: round-robin, least connections, and weighted distribution.',
     },
   })

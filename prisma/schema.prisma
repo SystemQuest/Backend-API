@@ -44,15 +44,16 @@ model Language {
 }
 
 model Course {
-  id          String        @id @default(cuid())
-  name        String        @unique
-  slug        String        @unique
-  description String?       @db.Text
-  shortName   String?       @map("short_name")
-  difficulty  String        @default("medium") // very_easy, easy, medium, hard
-  releaseStatus String      @default("live") @map("release_status") // alpha, beta, live
-  createdAt   DateTime      @default(now()) @map("created_at")
-  updatedAt   DateTime      @updatedAt @map("updated_at")
+  id               String        @id @default(cuid())
+  name             String        @unique
+  slug             String        @unique
+  description      String?       @db.Text
+  shortDescription String?       @map("short_description") // Brief one-line description
+  shortName        String?       @map("short_name")
+  difficulty       String        @default("medium") // very_easy, easy, medium, hard
+  releaseStatus    String        @default("live") @map("release_status") // alpha, beta, live
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
 
   stages          CourseStage[]
   repositories    Repository[]
@@ -106,6 +107,7 @@ model Repository {
   githubRepoId    String?   @unique @map("github_repo_id")
   cloneUrl        String    @map("clone_url")
   htmlUrl         String    @map("html_url")
+  status          String    @default("active") // active, archived
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -121,15 +123,16 @@ model Repository {
 }
 
 model Submission {
-  id            String   @id @default(cuid())
-  repositoryId  String   @map("repository_id")
-  userId        String   @map("user_id")
-  stageId       String   @map("stage_id")
-  commitSha     String   @map("commit_sha")
-  status        String   @default("pending") // pending, running, passed, failed
-  testOutput    String?  @db.Text @map("test_output")
-  createdAt     DateTime @default(now()) @map("created_at")
-  completedAt   DateTime? @map("completed_at")
+  id             String   @id @default(cuid())
+  repositoryId   String   @map("repository_id")
+  userId         String   @map("user_id")
+  stageId        String   @map("stage_id")
+  commitSha      String   @map("commit_sha")
+  status         String   @default("pending") // pending, running, passed, failed
+  testOutput     String?  @db.Text @map("test_output")
+  outputSummary  String?  @map("output_summary") // Brief summary of test results
+  createdAt      DateTime @default(now()) @map("created_at")
+  completedAt    DateTime? @map("completed_at")
 
   repository Repository  @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
