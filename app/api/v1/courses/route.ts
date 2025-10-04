@@ -12,8 +12,10 @@ type CourseLanguage = {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const include = searchParams.get('include')?.split(',') || []
+  const status = searchParams.get('status') // 过滤参数：live, beta, alpha
   
   const courses = await prisma.course.findMany({
+    where: status ? { releaseStatus: status } : undefined,
     include: {
       stages: include.includes('stages') ? {
         orderBy: { position: 'asc' },
