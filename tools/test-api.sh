@@ -8,7 +8,7 @@ echo "=============================="
 echo ""
 
 # 配置
-API_BASE="http://localhost:3000"
+API_BASE="${API_BASE:-http://localhost:3000}"
 ACCESS_TOKEN="${1:-}"
 
 if [ -z "$ACCESS_TOKEN" ]; then
@@ -38,19 +38,18 @@ test_api() {
     
     if [ "$needs_auth" = "true" ]; then
         echo "   认证: 需要 🔒"
-        response=$(curl -s -w "\n%{http_code}" \
+        http_code=$(curl -s -o /tmp/api_response.json -w "%{http_code}" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
             "$API_BASE$endpoint")
+        body=$(cat /tmp/api_response.json 2>/dev/null)
     else
         echo "   认证: 不需要"
-        response=$(curl -s -w "\n%{http_code}" \
+        http_code=$(curl -s -o /tmp/api_response.json -w "%{http_code}" \
             -H "Content-Type: application/json" \
             "$API_BASE$endpoint")
+        body=$(cat /tmp/api_response.json 2>/dev/null)
     fi
-    
-    http_code=$(echo "$response" | tail -n1)
-    body=$(echo "$response" | sed '$d')
     
     if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
         echo "   状态: ✅ $http_code"
