@@ -168,64 +168,45 @@
 | 模型 | v2.2设计 | 当前实现 | 差异 |
 |------|----------|---------|------|
 | **User** | ✅ | ✅ | ✅ 完全对齐 |
-| **Course** | ✅ | ✅ | ⚠️ 缺少 `shortDescription` |
+| **Course** | ✅ | ✅ | ✅ 完全对齐（已添加 shortDescription） |
 | **CourseStage** | ✅ | ✅ | ✅ 完全对齐 |
 | **Language** | ✅ | ✅ | ✅ 完全对齐 |
 | **CourseLanguage** | ✅ | ✅ | ✅ 完全对齐 |
-| **Repository** | ✅ | ✅ | ⚠️ 缺少 `status` 字段 |
-| **Submission** | ✅ | ✅ | ⚠️ 缺少 `outputSummary` 字段 |
+| **Repository** | ✅ | ✅ | ✅ 完全对齐（已添加 status） |
+| **Submission** | ✅ | ✅ | ✅ 完全对齐（已添加 outputSummary） |
 | **CourseStageCompletion** | ✅ | ✅ | ✅ 完全对齐 |
 
-### ⚠️ 需要调整的字段
+### ✅ 数据库字段已完全对齐
 
-#### 1. Course 表
+#### 1. Course 表 ✅
 ```prisma
-// 当前
 model Course {
-  description String? @db.Text
-  shortName   String?
-  // ...
-}
-
-// 应该添加
-model Course {
-  description      String? @db.Text
-  shortDescription String? @db.Text @map("short_description") // ⚠️ 缺失
-  shortName        String?
+  id               String   @id @default(cuid())
+  name             String   @unique
+  slug             String   @unique
+  description      String?  @db.Text
+  shortDescription String?  @map("short_description") // ✅ 已添加
+  shortName        String?  @map("short_name")
   // ...
 }
 ```
 
-#### 2. Repository 表
+#### 2. Repository 表 ✅
 ```prisma
-// 当前
 model Repository {
-  id              String
-  userId          String
-  // ...
-}
-
-// 应该添加
-model Repository {
-  id              String
-  userId          String
-  status          String   @default("active") // ⚠️ 缺失 (active, archived)
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  status          String   @default("active") // ✅ 已添加 (active, archived)
   // ...
 }
 ```
 
-#### 3. Submission 表
+#### 3. Submission 表 ✅
 ```prisma
-// 当前
 model Submission {
-  testOutput    String? @db.Text
-  // ...
-}
-
-// 应该添加
-model Submission {
-  testOutput    String? @db.Text
-  outputSummary String? @db.Text @map("output_summary") // ⚠️ 缺失
+  id            String   @id @default(cuid())
+  testOutput    String?  @db.Text @map("test_output")
+  outputSummary String?  @map("output_summary") // ✅ 已添加
   // ...
 }
 ```
@@ -256,16 +237,16 @@ model Submission {
 #### 2. 添加数据库缺失字段
 ```
 
-#### 2. 添加数据库缺失字段
-**影响**: 功能完整性  
-**修复时间**: 30分钟
+#### 2. ~~添加数据库缺失字段~~ ✅ 已完成
 
-```bash
-# 创建迁移
-npx prisma migrate dev --name add_missing_fields
-
-# 更新 seed 数据
-```
+**完成内容**:
+- ✅ 添加 `Course.shortDescription` 字段
+- ✅ 添加 `Repository.status` 字段（默认 'active'）
+- ✅ 添加 `Submission.outputSummary` 字段
+- ✅ 创建 migration: `20251004140127_add_missing_fields`
+- ✅ 更新 seed.js 为所有课程添加 shortDescription
+- ✅ 应用到本地和生产数据库
+- ✅ 已提交到版本控制
 
 ### 🟡 P1 (重要，应尽快修复)
 
