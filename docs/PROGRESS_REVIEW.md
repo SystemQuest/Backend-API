@@ -75,7 +75,7 @@
 |------|----------|---------|---------|
 | **查询参数** | ✅ | ✅ | 完全对齐 |
 | - include (stages, languages) | ✅ | ✅ | 完全对齐 |
-| - status 过滤 | ✅ | ❌ 未实现 | 需要补充 |
+| - status 过滤 | ✅ | ✅ | 完全对齐 |
 | **响应格式** | ✅ | ✅ | 完全对齐 |
 | - 扁平化 languages | ✅ | ✅ | 完全对齐 |
 | - stages 排序 | ✅ | ✅ | 完全对齐 |
@@ -84,8 +84,6 @@
 | - CourseStage | ✅ | ✅ | 完全对齐 |
 | - Language | ✅ | ✅ | 完全对齐 |
 | - CourseLanguage | ✅ | ✅ | 完全对齐 |
-
-**⚠️ 需要补充**: 课程列表 API 添加 `status` 参数过滤
 
 ---
 
@@ -250,20 +248,14 @@ model Submission {
 
 ### 🟡 P1 (重要，应尽快修复)
 
-#### 3. 课程列表添加 status 过滤
-**当前**: 无过滤  
-**设计**: 支持 `status=live,beta,alpha`  
-**影响**: 用户体验  
-**修复时间**: 15分钟
+#### 3. ~~课程列表添加 status 过滤~~ ✅ 已完成
 
-```typescript
-// app/api/v1/courses/route.ts
-const status = searchParams.get('status')
-const courses = await prisma.course.findMany({
-  where: status ? { releaseStatus: status } : undefined,
-  // ...
-})
-```
+**完成内容**:
+- ✅ 添加 `?status=live,beta,alpha` 查询参数支持
+- ✅ 过滤条件：`where: status ? { releaseStatus: status } : undefined`
+- ✅ 测试验证：所有status值（live, beta, alpha）
+- ✅ 无status参数时返回所有课程
+- ✅ 已提交到版本控制
 
 #### 4. 用户信息 API 添加 repositories 关联
 **当前**: `/v1/auth/me` 未支持 `include=repositories`  
