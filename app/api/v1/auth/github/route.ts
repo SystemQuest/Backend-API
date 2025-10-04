@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   // 生成随机 state 用于 CSRF 保护
   const state = Math.random().toString(36).substring(2, 15)
   

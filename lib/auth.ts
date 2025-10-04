@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAccessToken, type AccessTokenPayload } from './jwt'
+import { verifyAccessToken } from './jwt'
 
 export async function requireAuth(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
@@ -18,7 +18,7 @@ export async function requireAuth(req: NextRequest) {
   try {
     const payload = await verifyAccessToken(token)
     return { user: payload }
-  } catch (error) {
+  } catch {
     return {
       error: NextResponse.json(
         { error: { code: 'UNAUTHORIZED', message: 'Invalid or expired token' } },
@@ -40,7 +40,7 @@ export async function optionalAuth(req: NextRequest) {
   try {
     const payload = await verifyAccessToken(token)
     return { user: payload }
-  } catch (error) {
+  } catch {
     return { user: null }
   }
 }

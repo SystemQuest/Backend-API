@@ -1,15 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+type CourseLanguage = {
+  language: {
+    id: string
+    slug: string
+    name: string
+  }
+}
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
+  const { slug } = await params
   const { searchParams } = new URL(req.url)
   const include = searchParams.get('include')?.split(',') || []
   
   const course = await prisma.course.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       stages: include.includes('stages') ? {
         orderBy: { position: 'asc' },
@@ -30,10 +39,17 @@ export async function GET(
   }
   
   // 转换数据格式，展平 languages
-  const { courseLanguages, ...rest } = course as any
+  const { courseLanguages, ...rest } = course
+  
+  // courseLanguages might be false (when not included) or an array with language relation
+  let languages
+  if (courseLanguages && Array.isArray(courseLanguages) && courseLanguages.length > 0) {
+    languages = (courseLanguages as unknown as CourseLanguage[]).map((cl) => cl.language)
+  }
+  
   const data = {
     ...rest,
-    languages: courseLanguages?.map((cl: any) => cl.language) || undefined,
+    languages,
   }
   
   return NextResponse.json(data)

@@ -63,7 +63,7 @@ export async function verifyAccessToken(token: string): Promise<AccessTokenPaylo
     }
 
     return payload as AccessTokenPayload
-  } catch (error) {
+  } catch {
     throw new Error('Invalid or expired access token')
   }
 }
@@ -79,7 +79,7 @@ export async function verifyRefreshToken(token: string): Promise<RefreshTokenPay
     }
 
     return payload as RefreshTokenPayload
-  } catch (error) {
+  } catch {
     throw new Error('Invalid or expired refresh token')
   }
 }

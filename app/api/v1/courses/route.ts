@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+type CourseLanguage = {
+  language: {
+    id: string
+    slug: string
+    name: string
+  }
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const include = searchParams.get('include')?.split(',') || []
@@ -21,10 +29,17 @@ export async function GET(req: NextRequest) {
   
   // 转换数据格式，展平 languages
   const data = courses.map(course => {
-    const { courseLanguages, ...rest } = course as any
+    const { courseLanguages, ...rest } = course
+    
+    // courseLanguages might be false (when not included) or an array with language relation
+    let languages
+    if (courseLanguages && Array.isArray(courseLanguages) && courseLanguages.length > 0) {
+      languages = (courseLanguages as unknown as CourseLanguage[]).map((cl) => cl.language)
+    }
+    
     return {
       ...rest,
-      languages: courseLanguages?.map((cl: any) => cl.language) || undefined,
+      languages,
     }
   })
   
